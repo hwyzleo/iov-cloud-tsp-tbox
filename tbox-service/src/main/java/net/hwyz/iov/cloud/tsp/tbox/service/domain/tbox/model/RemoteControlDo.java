@@ -10,6 +10,7 @@ import net.hwyz.iov.cloud.tsp.tbox.api.contract.enums.RemoteControlType;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.contract.enums.MsgFlow;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.Map;
 
 /**
@@ -130,10 +131,12 @@ public class RemoteControlDo extends BaseDo<String> implements DomainObj<RemoteC
     /**
      * 转换参数
      *
-     * @param type   远控类型
-     * @param params 远控参数
+     * @param type         远控类型
+     * @param originParams 原始远控参数
      */
-    private void convertParams(RemoteControlType type, Map<String, Object> params) {
-
+    private void convertParams(RemoteControlType type, Map<String, Object> originParams) {
+        Map<String, Object> newParams = new HashMap<>();
+        newParams.put("type", type);
+        params = newParams;
     }
 }
