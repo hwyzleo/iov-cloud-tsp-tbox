@@ -9,6 +9,7 @@ import net.hwyz.iov.cloud.tsp.tbox.service.domain.factory.TboxFactory;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.model.RemoteControlDo;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.repository.RemoteControlRepository;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.service.TboxService;
+import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.msg.TboxCmdProducer;
 import org.springframework.stereotype.Service;
 
 import java.util.Map;
@@ -25,6 +26,7 @@ public class TboxAppService {
 
     private final TboxService tboxService;
     private final TboxFactory tboxFactory;
+    private final TboxCmdProducer tboxCmdProducer;
     private final RemoteControlRepository remoteControlRepository;
 
     /**
@@ -41,7 +43,7 @@ public class TboxAppService {
         RemoteControlDo remoteControlOrigin = tboxService.getOrCreateRemoteControl(remoteControlNew);
         remoteControlOrigin.handle(remoteControlNew);
         remoteControlRepository.save(remoteControlOrigin);
-        // TODO 往网关发送远控消息
+        tboxCmdProducer.send(vin, remoteControlOrigin.getParams());
         return TboxCmdResponse.builder()
                 .vin(vin)
                 .cmdId(remoteControlOrigin.getCmdId())
