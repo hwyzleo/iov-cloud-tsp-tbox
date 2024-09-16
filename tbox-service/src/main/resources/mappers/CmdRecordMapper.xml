@@ -19,22 +19,23 @@
         <result column="msg_flow" property="msgFlow" />
         <result column="msg_retry" property="msgRetry" />
         <result column="msg_time" property="msgTime" />
+        <result column="msg_ack_time" property="msgAckTime" />
     </resultMap>
 
     <!-- 通用查询结果列 -->
     <sql id="baseColumnList">
-        id, vin, cmd_id, cmd_type, cmd_param, msg_flow, msg_retry, msg_time,
+        id, vin, cmd_id, cmd_type, cmd_param, msg_flow, msg_retry, msg_time, msg_ack_time,
         description, create_time, create_by, modify_time, modify_by, row_version, row_valid
     </sql>
 
     <!-- 插入 -->
     <insert id="insertPo" useGeneratedKeys="true" keyProperty="id">
         INSERT INTO tb_cmd_record (
-            id, vin, cmd_id, cmd_type, cmd_param, msg_flow, msg_retry, msg_time,
+            id, vin, cmd_id, cmd_type, cmd_param, msg_flow, msg_retry, msg_time, msg_ack_time,
             description, create_time, create_by, modify_time, modify_by, row_version, row_valid
         )
         VALUES (
-            #{id}, #{vin}, #{cmdId}, #{cmdType}, #{cmdParam}, #{msgFlow}, #{msgRetry}, #{msgTime},
+            #{id}, #{vin}, #{cmdId}, #{cmdType}, #{cmdParam}, #{msgFlow}, #{msgRetry}, #{msgTime}, #{msgAckTime},
             #{description}, now(), #{createBy}, now(), #{modifyBy}, 1, 1
         )
     </insert>
@@ -42,13 +43,13 @@
     <!-- 批量插入 -->
     <insert id="batchInsertPo" useGeneratedKeys="true" keyProperty="id" parameterType="java.util.List">
         INSERT INTO tb_cmd_record (
-            id, vin, cmd_id, cmd_type, cmd_param, msg_flow, msg_retry, msg_time,
+            id, vin, cmd_id, cmd_type, cmd_param, msg_flow, msg_retry, msg_time, msg_ack_time,
             description, create_time, create_by, modify_time, modify_by, row_version, row_valid
         )
         VALUES
         <foreach collection="list" item="item" index="index" separator=",">
         (
-            #{item.id}, #{item.vin}, #{item.cmdId}, #{item.cmdType}, #{item.cmdParam}, #{item.msgFlow}, #{item.msgRetry}, #{item.msgTime},
+            #{item.id}, #{item.vin}, #{item.cmdId}, #{item.cmdType}, #{item.cmdParam}, #{item.msgFlow}, #{item.msgRetry}, #{item.msgTime}, #{item.msgAckTime},
             #{item.description}, now(), #{item.createBy}, now(), #{item.modifyBy}, 1, 1
         )
         </foreach>
@@ -77,6 +78,9 @@
         </if>
         <if test="msgTime != null">
             t.msg_time = #{msgTime},
+        </if>
+        <if test="msgAckTime != null">
+            t.msg_ack_time = #{msgAckTime},
         </if>
         <if test="description != null and description != ''">
             t.description = #{description},
@@ -141,6 +145,9 @@
         <if test="msgTime != null">
             AND t.msg_time = #{msgTime}
         </if>
+        <if test="msgAckTime != null">
+            AND t.msg_ack_time = #{msgAckTime}
+        </if>
         <if test="description != null and description != ''">
             AND t.description = #{description}
         </if>
@@ -169,6 +176,15 @@
         WHERE t.row_valid = 1
         <!-- 添加自定义条件 -->
         ORDER BY t.id DESC
+    </select>
+
+    <!-- 根据指令ID查询指令记录 -->
+    <select id="selectPoByCmdId" parameterType="java.util.Map" resultMap="baseResultMap">
+        SELECT <include refid="baseColumnList"/>
+        FROM tb_cmd_record t
+        WHERE t.row_valid = 1
+        AND t.cmd_id = #{cmdId}
+        LIMIT 1
     </select>
 
     <!-- 根据Map对象统计记录数 -->

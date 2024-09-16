@@ -137,6 +137,10 @@ public class RemoteControlDo extends BaseDo<String> implements DomainObj<RemoteC
     private void convertParams(RemoteControlType type, Map<String, Object> originParams) {
         Map<String, Object> newParams = new HashMap<>();
         newParams.put("type", type);
+        newParams.put("cmdId", cmdId);
+        if (originParams != null) {
+            newParams.putAll(originParams);
+        }
         params = newParams;
     }
 }

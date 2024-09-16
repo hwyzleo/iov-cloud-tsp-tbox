@@ -10,8 +10,11 @@ import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.model.RemoteControlDo;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.repository.RemoteControlRepository;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.service.TboxService;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.msg.TboxCmdProducer;
+import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository.dao.CmdRecordDao;
+import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository.po.CmdRecordPo;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -26,6 +29,7 @@ public class TboxAppService {
 
     private final TboxService tboxService;
     private final TboxFactory tboxFactory;
+    private final CmdRecordDao cmdRecordDao;
     private final TboxCmdProducer tboxCmdProducer;
     private final RemoteControlRepository remoteControlRepository;
 
@@ -48,6 +52,27 @@ public class TboxAppService {
                 .vin(vin)
                 .cmdId(remoteControlOrigin.getCmdId())
                 .build();
+    }
+
+    /**
+     * TBOX指令ACK
+     *
+     * @param cmdId   指令ID
+     * @param ackTime ACK时间
+     */
+    public void cmdAck(String cmdId, Date ackTime) {
+        logger.debug("收到TBOX指令[{}]的ACK", cmdId);
+        CmdRecordPo cmdRecordPo = cmdRecordDao.selectPoByCmdId(cmdId);
+        if (cmdRecordPo != null) {
+            if (cmdRecordPo.getMsgAckTime() == null) {
+                cmdRecordPo.setMsgAckTime(ackTime);
+                cmdRecordDao.updatePo(cmdRecordPo);
+            } else {
+                logger.warn("TBOX指令[{}]已经被ACK过", cmdId);
+            }
+        } else {
+            logger.error("未找到ACK对应的TBOX指令[{}]", cmdId);
+        }
     }
 
 }
