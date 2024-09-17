@@ -23,6 +23,7 @@
 
     <properties>
         <tbox.version>0.0.1-SNAPSHOT</tbox.version>
+        <rvc.version>0.0.1-SNAPSHOT</rvc.version>
     </properties>
 
 </project>

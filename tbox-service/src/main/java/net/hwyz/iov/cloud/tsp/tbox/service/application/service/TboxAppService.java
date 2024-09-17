@@ -1,10 +1,14 @@
 package net.hwyz.iov.cloud.tsp.tbox.service.application.service;
 
 
+import cn.hutool.json.JSONObject;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.hwyz.iov.cloud.tsp.rvc.api.contract.enums.RvcCmdState;
+import net.hwyz.iov.cloud.tsp.rvc.api.contract.response.ControlResponse;
 import net.hwyz.iov.cloud.tsp.tbox.api.contract.enums.RemoteControlType;
 import net.hwyz.iov.cloud.tsp.tbox.api.contract.response.TboxCmdResponse;
+import net.hwyz.iov.cloud.tsp.tbox.service.domain.external.service.ExRvcService;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.factory.TboxFactory;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.model.RemoteControlDo;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.repository.RemoteControlRepository;
@@ -29,6 +33,7 @@ public class TboxAppService {
 
     private final TboxService tboxService;
     private final TboxFactory tboxFactory;
+    private final ExRvcService exRvcService;
     private final CmdRecordDao cmdRecordDao;
     private final TboxCmdProducer tboxCmdProducer;
     private final RemoteControlRepository remoteControlRepository;
@@ -52,6 +57,25 @@ public class TboxAppService {
                 .vin(vin)
                 .cmdId(remoteControlOrigin.getCmdId())
                 .build();
+    }
+
+    /**
+     * 远程控制响应
+     *
+     * @param vin       车架号
+     * @param eventType 事件类型
+     * @param results   远控结果
+     */
+    public void remoteControlResponse(String vin, String eventType, JSONObject results) {
+        String cmdId = results.getStr("cmdId");
+        RvcCmdState cmdState = RvcCmdState.valOf(results.getInt("state"));
+        logger.info("响应车辆[{}]远程控制[{}]指令[{}]状态[{}]", vin, eventType, cmdId, cmdState);
+        exRvcService.updateCmdState(cmdId, ControlResponse.builder()
+                .vin(vin)
+                .cmdId(cmdId)
+                .cmdState(cmdState)
+                .failureCode(results.getInt("failure"))
+                .build());
     }
 
     /**

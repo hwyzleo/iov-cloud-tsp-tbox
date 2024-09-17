@@ -55,9 +55,11 @@ public class TboxEventConsumer {
                         if (StrUtil.isNotBlank(vin)) {
                             logger.debug("收到车辆[{}]事件消息[{}]", vin, eventJson);
                             JSONObject event = JSONUtil.parseObj(eventJson);
-                            switch (event.getStr("type")) {
+                            String eventType = event.getStr("type");
+                            switch (eventType) {
                                 case "CMD_ACK" ->
                                         tboxAppService.cmdAck(event.getStr("cmdId"), event.getDate("ackTime"));
+                                case "FIND_VEHICLE" -> tboxAppService.remoteControlResponse(vin, eventType, event);
                                 default -> logger.warn("收到未知类型事件消息[{}]", eventJson);
                             }
                         } else {
