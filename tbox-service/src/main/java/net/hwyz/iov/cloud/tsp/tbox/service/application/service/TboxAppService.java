@@ -13,6 +13,7 @@ import net.hwyz.iov.cloud.tsp.tbox.service.domain.factory.TboxFactory;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.model.RemoteControlDo;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.repository.RemoteControlRepository;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.service.TboxService;
+import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.cache.CacheService;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.msg.TboxCmdProducer;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository.dao.CmdRecordDao;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository.po.CmdRecordPo;
@@ -33,6 +34,7 @@ public class TboxAppService {
 
     private final TboxService tboxService;
     private final TboxFactory tboxFactory;
+    private final CacheService cacheService;
     private final ExRvcService exRvcService;
     private final CmdRecordDao cmdRecordDao;
     private final TboxCmdProducer tboxCmdProducer;
@@ -91,6 +93,7 @@ public class TboxAppService {
             if (cmdRecordPo.getMsgAckTime() == null) {
                 cmdRecordPo.setMsgAckTime(ackTime);
                 cmdRecordDao.updatePo(cmdRecordPo);
+                cacheService.removeRemoteControl(cmdId);
             } else {
                 logger.warn("TBOX指令[{}]已经被ACK过", cmdId);
             }

@@ -14,6 +14,7 @@ import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
+import java.util.concurrent.TimeUnit;
 
 /**
  * 缓存服务接口实现类
@@ -28,13 +29,17 @@ public class CacheServiceImpl implements CacheService {
     private final RedisTemplate<String, String> redisTemplate;
 
     /**
-     * Redis Key前缀：远控
+     * Redis Key前缀：远控类型
      */
-    private static final String REDIS_KEY_PREFIX_REMOTE_CONTROL = "tbox:remote-control:";
+    private static final String REDIS_KEY_PREFIX_REMOTE_CONTROL_TYPE = "tbox:remote-control-type:";
+    /**
+     * Redis Key前缀：远控类型
+     */
+    private static final String REDIS_KEY_PREFIX_REMOTE_CONTROL_CMD = "tbox:remote-control-cmd:";
 
     @Override
     public Optional<RemoteControlDo> getRemoteControl(String vin, RemoteControlType remoteControlType) {
-        String remoteControlDoJson = redisTemplate.opsForValue().get(REDIS_KEY_PREFIX_REMOTE_CONTROL + vin + "-" + remoteControlType.name());
+        String remoteControlDoJson = redisTemplate.opsForValue().get(REDIS_KEY_PREFIX_REMOTE_CONTROL_TYPE + vin + "-" + remoteControlType.name());
         if (StrUtil.isNotBlank(remoteControlDoJson)) {
             JSONObject jsonObject = JSONUtil.parseObj(remoteControlDoJson);
             RemoteControlDo remoteControlDo = RemoteControlDo.builder()
@@ -56,8 +61,17 @@ public class CacheServiceImpl implements CacheService {
 
     @Override
     public void setRemoteControl(RemoteControlDo remoteControlDo) {
-        redisTemplate.opsForValue().set(REDIS_KEY_PREFIX_REMOTE_CONTROL + remoteControlDo.getVin() + "-" + remoteControlDo.getType().name(),
-                JSONUtil.parse(remoteControlDo).toJSONString(0));
+        redisTemplate.opsForValue().set(REDIS_KEY_PREFIX_REMOTE_CONTROL_TYPE + remoteControlDo.getVin() + "-" + remoteControlDo.getType().name(),
+                JSONUtil.parse(remoteControlDo).toJSONString(0), 5, TimeUnit.MINUTES);
+        redisTemplate.opsForValue().set(REDIS_KEY_PREFIX_REMOTE_CONTROL_CMD + remoteControlDo.getCmdId(),
+                remoteControlDo.getVin() + "-" + remoteControlDo.getType().name(), 5, TimeUnit.MINUTES);
     }
 
+    @Override
+    public void removeRemoteControl(String cmdId) {
+        String remoteControlType = redisTemplate.opsForValue().getAndDelete(REDIS_KEY_PREFIX_REMOTE_CONTROL_CMD + cmdId);
+        if (StrUtil.isNotBlank(remoteControlType)) {
+            redisTemplate.delete(REDIS_KEY_PREFIX_REMOTE_CONTROL_TYPE + remoteControlType);
+        }
+    }
 }

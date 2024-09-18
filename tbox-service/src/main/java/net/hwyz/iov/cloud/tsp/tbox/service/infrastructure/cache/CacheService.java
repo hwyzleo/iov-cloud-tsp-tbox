@@ -28,4 +28,11 @@ public interface CacheService {
      */
     void setRemoteControl(RemoteControlDo remoteControlDo);
 
+    /**
+     * 删除远控领域对象
+     *
+     * @param cmdId 指令ID
+     */
+    void removeRemoteControl(String cmdId);
+
 }
