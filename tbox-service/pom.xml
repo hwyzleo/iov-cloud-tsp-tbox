@@ -5,14 +5,17 @@
     <modelVersion>4.0.0</modelVersion>
     <parent>
         <groupId>net.hwyz.iov.cloud.tsp</groupId>
-        <artifactId>tbox</artifactId>
+        <artifactId>service-parent</artifactId>
         <version>0.0.1-SNAPSHOT</version>
+        <relativePath/>
     </parent>
 
     <artifactId>tbox-service</artifactId>
     <version>0.0.1-SNAPSHOT</version>
 
     <properties>
+        <tbox.version>0.0.1-SNAPSHOT</tbox.version>
+        <rvc.version>0.0.1-SNAPSHOT</rvc.version>
     </properties>
 
     <dependencies>
