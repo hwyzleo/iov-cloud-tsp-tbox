@@ -1,7 +1,6 @@
 package net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.repository;
 
-import net.hwyz.iov.cloud.tsp.framework.commons.domain.BaseRepository;
-import net.hwyz.iov.cloud.tsp.tbox.api.contract.enums.RemoteControlType;
+import net.hwyz.iov.cloud.framework.common.domain.BaseRepository;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.model.RemoteControlDo;
 
 import java.util.Map;

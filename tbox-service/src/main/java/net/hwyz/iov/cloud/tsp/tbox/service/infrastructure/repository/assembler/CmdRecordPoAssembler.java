@@ -25,7 +25,7 @@ public interface CmdRecordPoAssembler {
      */
     @Mappings({
             @Mapping(target = "type", source = "cmdType"),
-            @Mapping(target = "params", expression = "java(net.hwyz.iov.cloud.tsp.framework.commons.util.AssemblerHelper.json2Map(cmdRecordPo.getCmdParam()))"),
+            @Mapping(target = "params", expression = "java(net.hwyz.iov.cloud.framework.common.util.AssemblerHelper.json2Map(cmdRecordPo.getCmdParam()))"),
             @Mapping(target = "msgFlow", expression = "java(net.hwyz.iov.cloud.tsp.tbox.service.domain.contract.enums.MsgFlow.valOf(cmdRecordPo.getMsgFlow()))")
     })
     RemoteControlDo toRemoteControlDo(CmdRecordPo cmdRecordPo);
@@ -38,7 +38,7 @@ public interface CmdRecordPoAssembler {
      */
     @Mappings({
             @Mapping(target = "cmdType", expression = "java(net.hwyz.iov.cloud.tsp.tbox.service.domain.contract.enums.TboxCmdType.REMOTE_CONTROL.name())"),
-            @Mapping(target = "cmdParam", expression = "java(net.hwyz.iov.cloud.tsp.framework.commons.util.AssemblerHelper.map2Json(remoteControlDo.getParams()))"),
+            @Mapping(target = "cmdParam", expression = "java(net.hwyz.iov.cloud.framework.common.util.AssemblerHelper.map2Json(remoteControlDo.getParams()))"),
             @Mapping(target = "msgFlow", expression = "java(remoteControlDo.getMsgFlow().getValue())")
     })
     CmdRecordPo fromRemoteControlDo(RemoteControlDo remoteControlDo);

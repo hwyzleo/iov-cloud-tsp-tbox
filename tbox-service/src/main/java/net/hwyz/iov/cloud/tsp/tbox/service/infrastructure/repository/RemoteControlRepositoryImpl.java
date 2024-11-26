@@ -2,7 +2,7 @@ package net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.hwyz.iov.cloud.tsp.framework.commons.domain.AbstractRepository;
+import net.hwyz.iov.cloud.framework.common.domain.AbstractRepository;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.model.RemoteControlDo;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.tbox.repository.RemoteControlRepository;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.cache.CacheService;

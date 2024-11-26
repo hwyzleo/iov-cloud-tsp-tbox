@@ -4,8 +4,8 @@ import cn.hutool.core.util.IdUtil;
 import lombok.Getter;
 import lombok.experimental.SuperBuilder;
 import lombok.extern.slf4j.Slf4j;
-import net.hwyz.iov.cloud.tsp.framework.commons.domain.BaseDo;
-import net.hwyz.iov.cloud.tsp.framework.commons.domain.DomainObj;
+import net.hwyz.iov.cloud.framework.common.domain.BaseDo;
+import net.hwyz.iov.cloud.framework.common.domain.DomainObj;
 import net.hwyz.iov.cloud.tsp.tbox.api.contract.enums.RemoteControlType;
 import net.hwyz.iov.cloud.tsp.tbox.service.domain.contract.enums.MsgFlow;
 
