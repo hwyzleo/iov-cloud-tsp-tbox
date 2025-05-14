@@ -5,7 +5,7 @@ import cn.hutool.json.JSONObject;
 import cn.hutool.json.JSONUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import net.hwyz.iov.cloud.tsp.tbox.service.application.service.TboxAppService;
+import net.hwyz.iov.cloud.tsp.tbox.service.application.service.TboxCmdAppService;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.kafka.KafkaProperties;
 import org.springframework.cloud.context.config.annotation.RefreshScope;
@@ -18,7 +18,7 @@ import javax.annotation.PostConstruct;
 import java.util.Collections;
 
 /**
- * TBOX事件消息消费者
+ * 车联终端事件消息消费者
  *
  * @author hwyz_leo
  */
@@ -35,7 +35,7 @@ public class TboxEventConsumer {
 
     private final String TOPIC_VAGW_TBOX_EVENT = "vagw-tbox-event";
 
-    private final TboxAppService tboxAppService;
+    private final TboxCmdAppService tboxAppService;
 
     /**
      * 消费车辆接入网关事件消息

@@ -23,14 +23,14 @@ import java.util.Date;
 import java.util.Map;
 
 /**
- * TBOX业务相关应用服务类
+ * 车联终端指令相关应用服务类
  *
  * @author hwyz_leo
  */
 @Slf4j
 @Service
 @RequiredArgsConstructor
-public class TboxAppService {
+public class TboxCmdAppService {
 
     private final TboxService tboxService;
     private final TboxFactory tboxFactory;

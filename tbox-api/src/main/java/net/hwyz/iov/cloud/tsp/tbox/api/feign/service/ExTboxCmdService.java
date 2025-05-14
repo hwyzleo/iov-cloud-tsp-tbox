@@ -5,7 +5,9 @@ import net.hwyz.iov.cloud.tsp.tbox.api.contract.request.RemoteControlRequest;
 import net.hwyz.iov.cloud.tsp.tbox.api.contract.response.TboxCmdResponse;
 import net.hwyz.iov.cloud.tsp.tbox.api.feign.service.factory.ExTboxCmdServiceFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 
 /**
  * 车联终端指令相关服务接口
@@ -22,6 +24,6 @@ public interface ExTboxCmdService {
      * @return TBOX指令响应
      */
     @PostMapping("/action/remoteControl")
-    TboxCmdResponse remoteControl(RemoteControlRequest request);
+    TboxCmdResponse remoteControl(@RequestBody @Validated RemoteControlRequest request);
 
 }
