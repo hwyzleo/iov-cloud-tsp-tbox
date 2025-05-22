@@ -1,10 +1,13 @@
 package net.hwyz.iov.cloud.tsp.tbox.api.feign.service;
 
 import net.hwyz.iov.cloud.framework.common.constant.ServiceNameConstants;
+import net.hwyz.iov.cloud.tsp.tbox.api.contract.TboxExService;
 import net.hwyz.iov.cloud.tsp.tbox.api.contract.request.BatchImportTboxRequest;
 import net.hwyz.iov.cloud.tsp.tbox.api.feign.service.factory.ExTboxInfoServiceFallbackFactory;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -23,5 +26,14 @@ public interface ExTboxInfoService {
      */
     @PostMapping("/batchImport")
     void batchImport(@RequestBody @Validated BatchImportTboxRequest request);
+
+    /**
+     * 根据序列号获取车联终端信息
+     *
+     * @param sn 序列号
+     * @return 车联终端信息
+     */
+    @GetMapping("/{sn}")
+    TboxExService getBySn(@PathVariable String sn);
 
 }

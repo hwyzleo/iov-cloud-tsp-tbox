@@ -28,6 +28,15 @@ public interface TboxExServiceAssembler {
     TboxPo toPo(TboxExService tboxExService);
 
     /**
+     * 数据对象转数据传输对象
+     *
+     * @param tboxPo 数据对象
+     * @return 数据传输对象
+     */
+    @Mappings({})
+    TboxExService fromPo(TboxPo tboxPo);
+
+    /**
      * 数据对象列表转数据传输对象列表
      *
      * @param tboxExServiceList 数据传输对象列表

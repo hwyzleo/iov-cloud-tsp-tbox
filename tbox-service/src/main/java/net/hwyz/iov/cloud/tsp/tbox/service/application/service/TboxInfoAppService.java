@@ -13,7 +13,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 /**
- * TBOX信息相关应用服务类
+ * 车联终端信息相关应用服务类
  *
  * @author hwyz_leo
  */
@@ -45,6 +45,16 @@ public class TboxInfoAppService {
                 logger.warn("数据批次[{}]车联终端信息[{}]已存在", batchNum, tboxPo.getSn());
             }
         }
+    }
+
+    /**
+     * 根据序列号获取车联终端信息
+     *
+     * @param sn 序列号
+     * @return 车联终端信息
+     */
+    public TboxPo getBySn(String sn) {
+        return tboxDao.selectBySn(sn);
     }
 
     /**
