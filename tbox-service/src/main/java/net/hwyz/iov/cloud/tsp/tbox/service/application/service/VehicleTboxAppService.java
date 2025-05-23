@@ -27,7 +27,7 @@ public class VehicleTboxAppService {
      * 根据车架号或序列号获取车辆车联终端
      *
      * @param sn 序列号
-     * @return 车联终端信息
+     * @return 车辆车联终端
      */
     public VehicleTboxPo get(String vin, String sn) {
         List<VehicleTboxPo> vehicleTboxPoList = vehicleTboxDao.selectPoByExample(VehicleTboxPo.builder().vin(vin).sn(sn).build());
