@@ -1,7 +1,10 @@
 package net.hwyz.iov.cloud.tsp.tbox.service.application.service;
 
+import cn.hutool.core.util.ObjUtil;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
+import net.hwyz.iov.cloud.framework.common.util.StrUtil;
+import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.exception.VehicleHasBindTboxException;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository.dao.VehicleTboxDao;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository.dao.VehicleTboxLogDao;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.repository.po.VehicleTboxLogPo;
@@ -32,6 +35,34 @@ public class VehicleTboxAppService {
     public VehicleTboxPo get(String vin, String sn) {
         List<VehicleTboxPo> vehicleTboxPoList = vehicleTboxDao.selectPoByExample(VehicleTboxPo.builder().vin(vin).sn(sn).build());
         return vehicleTboxPoList.isEmpty() ? null : vehicleTboxPoList.get(0);
+    }
+
+    /**
+     * 车辆绑定车联终端
+     *
+     * @param vin 车架号
+     * @param sn  序列号
+     */
+    public void bind(String vin, String sn) {
+        List<VehicleTboxPo> vehicleTboxPoList = vehicleTboxDao.selectPoByExample(VehicleTboxPo.builder().vin(vin).build());
+        VehicleTboxPo vehicleTboxPo;
+        if (vehicleTboxPoList.isEmpty()) {
+            vehicleTboxPo = VehicleTboxPo.builder()
+                    .vin(vin)
+                    .build();
+        } else {
+            vehicleTboxPo = vehicleTboxPoList.get(0);
+        }
+        if (StrUtil.isNotBlank(vehicleTboxPo.getSn()) && vehicleTboxPo.getSn().equalsIgnoreCase(sn)) {
+            throw new VehicleHasBindTboxException(vin, vehicleTboxPo.getSn(), sn);
+        }
+        vehicleTboxPo.setSn(sn);
+        if (ObjUtil.isNull(vehicleTboxPo.getId())) {
+            vehicleTboxDao.insertPo(vehicleTboxPo);
+        } else {
+            vehicleTboxDao.updatePo(vehicleTboxPo);
+        }
+        recordLog(vehicleTboxPo, "车辆绑定车联终端");
     }
 
     /**

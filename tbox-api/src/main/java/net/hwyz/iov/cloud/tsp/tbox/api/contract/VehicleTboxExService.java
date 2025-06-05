@@ -1,5 +1,6 @@
 package net.hwyz.iov.cloud.tsp.tbox.api.contract;
 
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -19,11 +20,13 @@ public class VehicleTboxExService {
     /**
      * 车架号
      */
+    @NotBlank(message = "车架号不能为空")
     private String vin;
 
     /**
      * 序列号
      */
+    @NotBlank(message = "序列号不能为空")
     private String sn;
 
 }

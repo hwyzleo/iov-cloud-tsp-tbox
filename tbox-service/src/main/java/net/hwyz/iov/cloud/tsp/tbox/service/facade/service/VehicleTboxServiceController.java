@@ -7,10 +7,8 @@ import net.hwyz.iov.cloud.tsp.tbox.api.contract.VehicleTboxExService;
 import net.hwyz.iov.cloud.tsp.tbox.service.application.service.VehicleTboxAppService;
 import net.hwyz.iov.cloud.tsp.tbox.service.facade.assembler.VehicleTboxExServiceAssembler;
 import net.hwyz.iov.cloud.tsp.tbox.service.infrastructure.exception.TboxBaseException;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * 车辆车联终端相关服务接口实现类
@@ -39,6 +37,17 @@ public class VehicleTboxServiceController {
             throw new TboxBaseException("车架号与序列号不能都为空");
         }
         return VehicleTboxExServiceAssembler.INSTANCE.fromPo(vehicleTboxAppService.get(vin, sn));
+    }
+
+    /**
+     * 车辆绑定车联终端
+     *
+     * @param vehicleTbox 车辆车联终端
+     */
+    @PostMapping("/bind")
+    public void bind(@RequestBody @Validated VehicleTboxExService vehicleTbox) {
+        logger.info("绑定车辆[{}]车联终端[{}]", vehicleTbox.getVin(), vehicleTbox.getSn());
+        vehicleTboxAppService.bind(vehicleTbox.getVin(), vehicleTbox.getSn());
     }
 
 }
