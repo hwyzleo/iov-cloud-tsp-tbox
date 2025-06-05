@@ -53,8 +53,13 @@ public class VehicleTboxAppService {
         } else {
             vehicleTboxPo = vehicleTboxPoList.get(0);
         }
-        if (StrUtil.isNotBlank(vehicleTboxPo.getSn()) && vehicleTboxPo.getSn().equalsIgnoreCase(sn)) {
-            throw new VehicleHasBindTboxException(vin, vehicleTboxPo.getSn(), sn);
+        if (StrUtil.isNotBlank(vehicleTboxPo.getSn())) {
+            if (!vehicleTboxPo.getSn().equalsIgnoreCase(sn)) {
+                throw new VehicleHasBindTboxException(vin, vehicleTboxPo.getSn(), sn);
+            } else {
+                logger.warn("车辆[{}]在[{}]已绑定过车联终端[{}]", vin, vehicleTboxPo.getCreateTime().getTime(), sn);
+                return;
+            }
         }
         vehicleTboxPo.setSn(sn);
         if (ObjUtil.isNull(vehicleTboxPo.getId())) {
